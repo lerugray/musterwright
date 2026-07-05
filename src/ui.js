@@ -75,8 +75,8 @@ export function renderDataTable({
     const col = columns.find((c) => c.key === sortState.key);
     if (col) {
       displayRows.sort((a, b) => {
-        const av = a[col.accessor ?? col.key];
-        const bv = b[col.accessor ?? col.key];
+        const av = a[col.key] ?? (col.accessor ? a[col.accessor] : undefined);
+        const bv = b[col.key] ?? (col.accessor ? b[col.accessor] : undefined);
         const as = String(av ?? '').toLowerCase();
         const bs = String(bv ?? '').toLowerCase();
         let cmp = as > bs ? 1 : as < bs ? -1 : 0;
@@ -95,7 +95,7 @@ export function renderDataTable({
     }
     for (const col of columns) {
       const td = el('td');
-      const rawValue = col.accessor ? row[col.accessor] : row[col.key];
+      const rawValue = row[col.key] ?? (col.accessor ? row[col.accessor] : undefined);
       const value = col.format ? col.format(rawValue, row) : formatCell(rawValue, col.type);
       if (col.type === 'boolean') {
         const checkbox = el('input', {

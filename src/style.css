@@ -126,6 +126,7 @@ button.danger:hover { background: rgba(255, 107, 107, 0.15); }
 }
 
 .tab-content section { height: 100%; display: flex; flex-direction: column; }
+.tab-content section[hidden] { display: none; }
 .tab-content h2 { margin: 0 0 10px; font-size: 1.1rem; }
 
 .table-container {
