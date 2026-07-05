@@ -194,8 +194,12 @@ function severityClass(sev) {
   return sev === 'error' ? 'badge-error' : sev === 'warning' ? 'badge-warn' : 'badge-info';
 }
 
+const SEVERITY_ORDER = { error: 0, warning: 1, info: 2 };
+
 function renderValidation() {
-  const findings = store.getValidation();
+  const findings = [...store.getValidation()].sort(
+    (a, b) => (SEVERITY_ORDER[a.severity] ?? 3) - (SEVERITY_ORDER[b.severity] ?? 3)
+  );
   const counts = findingsBySeverity(findings);
   UI.validationContainer.innerHTML = '';
 
