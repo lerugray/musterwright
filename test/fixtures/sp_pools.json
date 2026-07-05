@@ -1,0 +1,4 @@
+{
+  "USA": { "sp_count": 1, "av_per_sp": 7.0, "notes": "test" },
+  "CSA": { "sp_count": 1, "av_per_sp": 7.0 }
+}

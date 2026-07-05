@@ -1,0 +1,8 @@
+{
+  "USA": [
+    { "id": "10.0", "faction": "USA", "av": 4.0, "dv": 1.0, "mp": 0.0, "type": "art", "size": "x", "fresh": true }
+  ],
+  "CSA": [
+    { "id": "20.0", "faction": "CSA", "av": 4.0, "dv": 1.0, "mp": 0.0, "type": "art", "size": "x", "fresh": true }
+  ]
+}

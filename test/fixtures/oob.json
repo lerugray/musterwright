@@ -1,0 +1,8 @@
+{
+  "USA": [
+    { "id": "1 NY", "faction": "USA", "sp": 4, "dv": 7.0, "mp": 1.0, "type": "inf", "size": "xx", "fresh": true }
+  ],
+  "CSA": [
+    { "id": "1 VA", "faction": "CSA", "sp": 4, "dv": 7.0, "mp": 1.0, "type": "inf", "size": "xx", "fresh": true }
+  ]
+}

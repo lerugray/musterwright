@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Musterwright — OOB editor</title>
+  <link rel="stylesheet" href="src/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <h1>Musterwright</h1>
+      <span class="tagline">Order-of-battle editor</span>
+    </div>
+    <div class="project-bar">
+      <span id="project-name" class="project-name">untitled</span>
+      <span id="autosave-status" class="autosave-status">—</span>
+    </div>
+    <div class="actions">
+      <button id="new-blank" type="button">New blank</button>
+      <button id="open-gota" type="button">Open GotA source</button>
+      <div class="export-group">
+        <button id="export-oob" type="button">Export oob.json</button>
+        <button id="export-assets" type="button">Export assets.json</button>
+        <button id="export-pools" type="button">Export sp_pools.json</button>
+        <button id="export-all" type="button" class="primary">Export all</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button data-tab="roster" class="active" type="button">Roster</button>
+    <button data-tab="assets" type="button">Assets</button>
+    <button data-tab="pools" type="button">SP Pools</button>
+    <button data-tab="validation" type="button">Validation</button>
+  </nav>
+
+  <main class="tab-content">
+    <section data-pane="roster" id="roster-pane">
+      <h2>Roster</h2>
+      <div id="roster-container" class="table-container"></div>
+    </section>
+    <section data-pane="assets" id="assets-pane" hidden>
+      <h2>Assets</h2>
+      <div id="assets-container" class="table-container"></div>
+    </section>
+    <section data-pane="pools" id="pools-pane" hidden>
+      <h2>SP Pools</h2>
+      <div id="pools-container" class="table-container"></div>
+    </section>
+    <section data-pane="validation" id="validation-pane" hidden>
+      <h2>Validation</h2>
+      <div id="validation-container" class="validation-container"></div>
+    </section>
+  </main>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

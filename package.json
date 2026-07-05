@@ -1,0 +1,25 @@
+{
+  "name": "musterwright",
+  "version": "0.1.0",
+  "description": "Order-of-battle / unit editor for hex-and-counter wargame development — zero-build vanilla JS local web app.",
+  "license": "MIT",
+  "author": "Ray Weiss",
+  "type": "module",
+  "homepage": "https://github.com/lerugray/musterwright",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lerugray/musterwright.git"
+  },
+  "scripts": {
+    "serve": "python3 -m http.server 8000",
+    "test": "node --test && node verify/duplicate-id.mjs && node verify/gota-round-trip.mjs"
+  },
+  "keywords": [
+    "wargame",
+    "order-of-battle",
+    "oob",
+    "counter",
+    "editor",
+    "zero-build"
+  ]
+}
