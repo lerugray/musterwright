@@ -13,5 +13,10 @@
     "slug": "findings-panel",
     "title": "Findings Panel",
     "group": "findings-panel"
+  },
+  {
+    "slug": "light-workbench",
+    "title": "Light Workbench",
+    "group": "light-workbench"
   }
 ]

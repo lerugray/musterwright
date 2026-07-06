@@ -114,13 +114,13 @@
   /* Unit-type icon centered in the frame area */
   .counter .icon {
     position: absolute;
-    top: 4px; left: 0; right: 0;
-    height: 34px;
+    top: 10px; left: 16px; right: 16px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .counter .icon svg { display: block; }
+  .counter .icon svg { display: block; width: 30px; height: 24px; }
 
   /* Icon stroke color: black or white for contrast per faction luminance */
   .counter.usa .icon svg { stroke: #ffffff; fill: #ffffff; }
@@ -131,9 +131,9 @@
   /* Unit ID top-left, small */
   .counter .unit-id {
     position: absolute;
-    top: 3px; left: 5px;
+    top: 2px; left: 4px;
     font-family: var(--font-data);
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     font-weight: 700;
     line-height: 1;
   }
@@ -145,13 +145,15 @@
   /* Factor numbers along the bottom edge, data font */
   .counter .factors {
     position: absolute;
-    bottom: 3px; left: 0; right: 0;
+    bottom: 1px; left: 0; right: 0;
     display: flex;
+    align-items: flex-end;
     justify-content: space-around;
     font-family: var(--font-data);
-    font-size: 0.62rem;
+    font-size: 0.82rem;
     font-weight: 700;
     line-height: 1;
+    height: 14px;
     padding: 0 3px;
   }
   .counter.usa .factors { color: #ffffff; }

@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Musterwright — Light Workbench</title>
+<link rel="stylesheet" href="../../design-systems/musterwright/tokens/colors_and_type.css" />
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--hx-bg-canvas);
+    color: var(--hx-text);
+    font-family: var(--font-ui);
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* ---- Top chrome (hairline) ---- */
+  .app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 18px;
+    background: var(--hx-bg-panel);
+    border-bottom: 1px solid var(--hx-hairline);
+    flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: baseline; gap: 10px; }
+  .brand h1 { margin: 0; font-size: 1.25rem; letter-spacing: -0.01em; font-weight: 600; }
+  .tagline { color: var(--hx-text-dim); font-size: 0.82rem; }
+
+  .project-bar { display: flex; align-items: center; gap: 10px; }
+  .project-name {
+    font-weight: 600; padding: 3px 10px;
+    background: var(--hx-bg-canvas);
+    border: 1px solid var(--hx-hairline);
+    border-radius: 4px;
+  }
+  .autosave-status { color: var(--hx-text-dim); font-size: 0.78rem; }
+
+  .actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  button {
+    background: var(--hx-bg-canvas);
+    color: var(--hx-text);
+    border: 1px solid var(--hx-hairline);
+    border-radius: 4px;
+    padding: 5px 11px;
+    cursor: pointer;
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+  }
+  button.primary {
+    background: var(--hx-accent);
+    color: #0d1117;
+    border-color: var(--hx-accent);
+    font-weight: 600;
+  }
+  .export-group { display: flex; gap: 5px; }
+
+  /* ---- Tabs (hairline) ---- */
+  .tabs {
+    display: flex;
+    background: var(--hx-bg-panel);
+    border-bottom: 1px solid var(--hx-hairline);
+  }
+  .tabs button {
+    flex: 0 0 auto;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    background: transparent;
+    padding: 10px 18px;
+    font-weight: 500;
+    color: var(--hx-text-dim);
+  }
+  .tabs button.active {
+    color: var(--hx-accent);
+    border-bottom-color: var(--hx-accent);
+  }
+
+  /* ---- Workbench main ---- */
+  main { flex: 1; padding: 18px; overflow: auto; }
+  main h2 { margin: 0 0 12px; font-size: 1.05rem; font-weight: 600; }
+
+  .table-wrap {
+    background: var(--hx-bg-panel);
+    border: 1px solid var(--hx-hairline);
+    border-radius: 5px;
+    overflow: auto;
+  }
+
+  table.roster {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 760px;
+    font-family: var(--font-data);
+    font-size: 0.85rem;
+  }
+
+  /* Sticky hairline header */
+  table.roster thead {
+    position: sticky; top: 0; z-index: 1;
+    background: var(--hx-bg-panel);
+  }
+  table.roster th {
+    text-align: left;
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--hx-hairline);
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--hx-text-dim);
+    user-select: none;
+    white-space: nowrap;
+  }
+  table.roster th .sort-arrow { color: var(--hx-accent); margin-left: 4px; }
+
+  table.roster td {
+    padding: 7px 12px;
+    border-bottom: 1px solid var(--hx-hairline);
+    white-space: nowrap;
+  }
+
+  /* Right-aligned numeric columns */
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* Faction chip */
+  .chip {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 3px;
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--hx-text);
+    border: 1px solid var(--hx-hairline);
+    background: var(--hx-bg-canvas);
+  }
+  .chip-usa { border-color: #2b4a7a; color: #9ec1ef; }
+  .chip-csa { border-color: #6b6b6b; color: #c9c9c9; }
+  .chip-mex { border-color: #2d6b3a; color: #8fd6a3; }
+  .chip-can { border-color: #8b7355; color: #d8c7a8; }
+
+  /* Echelon / size markers */
+  .size-mark { color: var(--hx-text-dim); letter-spacing: 0.06em; }
+
+  /* Fresh badge */
+  .fresh {
+    font-family: var(--font-ui); font-size: 0.72rem;
+    color: var(--hx-text-dim);
+  }
+  .fresh.no { color: var(--hx-text-dim); opacity: 0.55; }
+
+  /* Row states */
+  tbody tr:hover { background: rgba(255, 255, 255, 0.025); }
+
+  /* Accent focus row (selected / editing) */
+  tbody tr.focus {
+    background: color-mix(in srgb, var(--hx-accent) 10%, transparent);
+    box-shadow: inset 2px 0 0 var(--hx-accent);
+  }
+  tbody tr.focus td:first-child { color: var(--hx-accent); }
+
+  /* Duplicate-id row flagged in danger red */
+  tbody tr.dup-id {
+    box-shadow: inset 2px 0 0 var(--hx-danger);
+  }
+  tbody tr.dup-id td.id-cell { color: var(--hx-danger); font-weight: 700; }
+  tbody tr.dup-id .dup-flag {
+    margin-left: 6px;
+    font-family: var(--font-ui);
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--hx-danger);
+    border: 1px solid var(--hx-danger);
+    padding: 0 5px;
+    border-radius: 3px;
+  }
+
+  .row-actions { width: 48px; text-align: center; }
+  .row-actions button {
+    padding: 2px 7px; font-size: 0.78rem;
+    border: 1px solid var(--hx-hairline);
+  }
+
+  .add-row {
+    margin-top: 10px; width: 100%; font-weight: 600;
+  }
+
+  /* Inline-edit cell (focus row shows accent border) */
+  .cell-edit {
+    width: 100%;
+    background: var(--hx-bg-canvas);
+    color: var(--hx-text);
+    border: 1px solid var(--hx-accent);
+    border-radius: 3px;
+    padding: 3px 6px;
+    font-family: var(--font-data);
+    font-size: 0.85rem;
+  }
+
+  /* Footer status bar */
+  .status-bar {
+    display: flex; gap: 16px; align-items: center;
+    padding: 7px 18px;
+    background: var(--hx-bg-panel);
+    border-top: 1px solid var(--hx-hairline);
+    font-family: var(--font-data); font-size: 0.78rem;
+    color: var(--hx-text-dim);
+  }
+  .status-bar .sep { color: var(--hx-hairline); }
+  .status-bar .err { color: var(--hx-danger); }
+  .status-bar .ok { color: var(--hx-accent); }
+
+  /* ---- Light mode (drafting-paper) token override ----
+     Applied here as a local override of the hx- custom properties so this
+     mockup renders the roster-workbench surface in light mode. Counter /
+     status colors that represent physical artifacts (faction fills, the
+     chip border colors) are left unchanged; only UI-derived tints adapt
+     for legibility on paper. */
+  :root {
+    --hx-bg-canvas: #f2f0ea;
+    --hx-bg-panel: #faf9f6;
+    --hx-hairline: #d8d4cb;
+    --hx-text: #22252a;
+    --hx-text-dim: #6b7078;
+    --hx-accent: #0d7fa8;
+    --hx-danger: #b91c1c;
+  }
+  /* Faction chip text: use the unchanged faction color directly (reads on
+     paper); borders (the physical-artifact colors) are unchanged. */
+  .chip-usa { border-color: #2b4a7a; color: #2b4a7a; }
+  .chip-csa { border-color: #6b6b6b; color: #6b6b6b; }
+  .chip-mex { border-color: #2d6b3a; color: #2d6b3a; }
+  .chip-can { border-color: #8b7355; color: #8b7355; }
+  /* Primary button: white text on the darkened paper accent. */
+  button.primary { color: #ffffff; }
+  /* Row hover: darken instead of lighten on paper. */
+  tbody tr:hover { background: rgba(0, 0, 0, 0.035); }
+</style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <h1>Musterwright</h1>
+      <span class="tagline">Order-of-battle editor</span>
+    </div>
+    <div class="project-bar">
+      <span class="project-name">gota-1914-americas</span>
+      <span class="autosave-status">saved 14:32</span>
+    </div>
+    <div class="actions">
+      <button type="button">New blank</button>
+      <button type="button">Open GotA source</button>
+      <div class="export-group">
+        <button type="button">Export oob.json</button>
+        <button type="button">Export assets.json</button>
+        <button type="button">Export sp_pools.json</button>
+        <button type="button" class="primary">Export all</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="active" type="button">Roster</button>
+    <button type="button">Assets</button>
+    <button type="button">SP Pools</button>
+    <button type="button">Validation</button>
+    <button type="button">Counters</button>
+  </nav>
+
+  <main>
+    <h2>Roster</h2>
+    <div class="table-wrap">
+      <table class="roster">
+        <thead>
+          <tr>
+            <th>ID <span class="sort-arrow">▾</span></th>
+            <th>Faction</th>
+            <th>Type</th>
+            <th>Size</th>
+            <th class="num">SP</th>
+            <th class="num">DV</th>
+            <th class="num">MP</th>
+            <th>Fresh</th>
+            <th class="row-actions"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1 NY</td>
+            <td><span class="chip chip-usa">USA</span></td>
+            <td>inf</td>
+            <td class="size-mark">xx</td>
+            <td class="num">4</td>
+            <td class="num">7.0</td>
+            <td class="num">1.0</td>
+            <td><span class="fresh">yes</span></td>
+            <td class="row-actions"><button type="button">⋯</button></td>
+          </tr>
+          <tr class="focus">
+            <td><input class="cell-edit" value="5 PA" /></td>
+            <td><span class="chip chip-usa">USA</span></td>
+            <td>inf</td>
+            <td class="size-mark">xx</td>
+            <td class="num">3</td>
+            <td class="num">6.0</td>
+            <td class="num">1.0</td>
+            <td><span class="fresh">yes</span></td>
+            <td class="row-actions"><button type="button">⋯</button></td>
+          </tr>
+          <tr>
+            <td>3 OH</td>
+            <td><span class="chip chip-usa">USA</span></td>
+            <td>cav</td>
+            <td class="size-mark">x</td>
+            <td class="num">2</td>
+            <td class="num">4.0</td>
+            <td class="num">3.0</td>
+            <td><span class="fresh">yes</span></td>
+            <td class="row-actions"><button type="button">⋯</button></td>
+          </tr>
+          <tr>
+            <td>10.0</td>
+            <td><span class="chip chip-usa">USA</span></td>
+            <td>art</td>
+            <td class="size-mark">x</td>
+            <td class="num">—</td>
+            <td class="num">1.0</td>
+            <td class="num">0.0</td>
+            <td><span class="fresh">yes</span></td>
+            <td class="row-actions"><button type="button">⋯</button></td>
+          </tr>
+          <tr>
+            <td>1 VA</td>
+            <td><span class="chip chip-csa">CSA</span></td>
+            <td>inf</td>
+            <td class="size-mark">xx</td>
+            <td class="num">4</td>
+            <td class="num">7.0</td>
+            <td class="num">1.0</td>
+            <td><span class="fresh">yes</span></td>
+            <td class="row-actions"><button type="button">⋯</button></td>
+          </tr>
+          <tr>
+            <td>2 NC</td>
+            <td><span class="chip chip-csa">CSA</span></td>
+            <td>inf</td>
+            <td class="size-mark">xx</td>
+            <td class="num">3</td>
+            <td class="num">5.0</td>
+            <td class="num">1.0</td>
+            <td><span class="fresh no">spent</span></td>
+            <td class="row-actions"><button type="button">⋯</button></td>
+          </tr>
+          <tr>
+            <td>4 TX</td>
+            <td><span class="chip chip-csa">CSA</span></td>
+            <td>cav</td>
+            <td class="size-mark">x</td>
+            <td class="num">2</td>
+            <td class="num">4.0</td>
+            <td class="num">3.0</td>
+            <td><span class="fresh">yes</span></td>
+            <td class="row-actions"><button type="button">⋯</button></td>
+          </tr>
+          <tr class="dup-id">
+            <td class="id-cell">1 VA<span class="dup-flag">dup id</span></td>
+            <td><span class="chip chip-csa">CSA</span></td>
+            <td>cav</td>
+            <td class="size-mark">x</td>
+            <td class="num">2</td>
+            <td class="num">4.0</td>
+            <td class="num">3.0</td>
+            <td><span class="fresh">yes</span></td>
+            <td class="row-actions"><button type="button">⋯</button></td>
+          </tr>
+          <tr>
+            <td>20.0</td>
+            <td><span class="chip chip-csa">CSA</span></td>
+            <td>art</td>
+            <td class="size-mark">x</td>
+            <td class="num">—</td>
+            <td class="num">1.0</td>
+            <td class="num">0.0</td>
+            <td><span class="fresh">yes</span></td>
+            <td class="row-actions"><button type="button">⋯</button></td>
+          </tr>
+          <tr>
+            <td>1 MEX</td>
+            <td><span class="chip chip-mex">MEX</span></td>
+            <td>inf</td>
+            <td class="size-mark">xx</td>
+            <td class="num">3</td>
+            <td class="num">5.0</td>
+            <td class="num">1.0</td>
+            <td><span class="fresh">yes</span></td>
+            <td class="row-actions"><button type="button">⋯</button></td>
+          </tr>
+          <tr>
+            <td>3 MEX</td>
+            <td><span class="chip chip-mex">MEX</span></td>
+            <td>cav</td>
+            <td class="size-mark">x</td>
+            <td class="num">2</td>
+            <td class="num">3.0</td>
+            <td class="num">3.0</td>
+            <td><span class="fresh">yes</span></td>
+            <td class="row-actions"><button type="button">⋯</button></td>
+          </tr>
+          <tr>
+            <td>1 CEF</td>
+            <td><span class="chip chip-can">CAN</span></td>
+            <td>inf</td>
+            <td class="size-mark">xx</td>
+            <td class="num">3</td>
+            <td class="num">6.0</td>
+            <td class="num">1.0</td>
+            <td><span class="fresh">yes</span></td>
+            <td class="row-actions"><button type="button">⋯</button></td>
+          </tr>
+          <tr>
+            <td>2 CEF</td>
+            <td><span class="chip chip-can">CAN</span></td>
+            <td>art</td>
+            <td class="size-mark">x</td>
+            <td class="num">—</td>
+            <td class="num">1.0</td>
+            <td class="num">0.0</td>
+            <td><span class="fresh no">spent</span></td>
+            <td class="row-actions"><button type="button">⋯</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <button class="add-row" type="button">+ Add unit</button>
+  </main>
+
+  <footer class="status-bar">
+    <span>13 units</span>
+    <span class="sep">│</span>
+    <span class="err">1 error</span>
+    <span class="sep">│</span>
+    <span>3 warnings</span>
+    <span class="sep">│</span>
+    <span class="ok">export blocked — resolve findings</span>
+  </footer>
+</body>
+</html>
