@@ -11,3 +11,27 @@ Zero-build vanilla JS local web app. Real game data lives in gitignored
 
 - Design basis: `docs/DESIGN.md`
 - Current build brief: `docs/handoffs/mvp-build-brief.md`
+
+## Status
+
+MVP shipped 2026-07-05: spine schema, GotA adapter, live validation (caught
+the real `gota-006` duplicate-id defect), and a clean import→export
+round-trip. Browser-dogfooded twice. Next up: a design-pipeline UI pass,
+TWU + NaB adapters, and the Phase 2 counter-graphics generator.
+
+## Quick start
+
+No build step. Serve the repo root with any static file server, e.g.:
+
+```
+python3 -m http.server
+```
+
+then open `index.html` in a browser. Run the test suite with:
+
+```
+npm test
+```
+
+Real game data goes in the gitignored `local/gota/source/` (not committed —
+this repo carries only the tool and synthetic fixtures).
