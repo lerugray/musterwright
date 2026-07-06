@@ -96,7 +96,23 @@ export function formatFactorText(unit) {
 
 const COUNTER_W = 72;
 const COUNTER_H = 100;
-const ICON_AREA = { x: 4, y: 4, w: 64, h: 64 };
+const FACTOR_ROW_H = Math.round(COUNTER_H * 0.2);
+const ICON_WIDTH_RATIO = 0.5;
+const ICON_BOX_W = Math.round(COUNTER_W * ICON_WIDTH_RATIO);
+const ICON_BOX_H = Math.round(COUNTER_H * 0.45);
+const ICON_BOX_X = (COUNTER_W - ICON_BOX_W) / 2;
+const UPPER_H = COUNTER_H - FACTOR_ROW_H;
+const ICON_BOX_Y = (UPPER_H - ICON_BOX_H) / 2;
+const FACTOR_FONT_SIZE = Math.max(12, Math.round(FACTOR_ROW_H * 0.65));
+
+/** Layout constants for tests and callers (SPI proportions). */
+export const COUNTER_LAYOUT = {
+  width: COUNTER_W,
+  height: COUNTER_H,
+  iconBox: { x: ICON_BOX_X, y: ICON_BOX_Y, w: ICON_BOX_W, h: ICON_BOX_H },
+  factorRowHeight: FACTOR_ROW_H,
+  factorFontSize: FACTOR_FONT_SIZE
+};
 
 /**
  * Render a unit counter as a complete inline SVG string.
@@ -111,7 +127,7 @@ export function renderCounterSVG(unit, factionColor) {
   const sidc = resolveSidc(unit.class);
 
   const sym = new ms.Symbol(sidc, {
-    size: 35,
+    size: ICON_BOX_W,
     frame: false,
     icon: true,
     monoColor: monoColor,
@@ -130,10 +146,10 @@ export function renderCounterSVG(unit, factionColor) {
 
   return `<svg xmlns="http://www.w3.org/2000/svg" class="unit-counter" viewBox="0 0 ${COUNTER_W} ${COUNTER_H}" width="${COUNTER_W}" height="${COUNTER_H}">
   <rect x="0.5" y="0.5" width="${COUNTER_W - 1}" height="${COUNTER_H - 1}" fill="${factionColor}" stroke="rgba(0,0,0,0.5)" stroke-width="1" rx="2" />
-  <g transform="translate(${ICON_AREA.x}, ${ICON_AREA.y}) scale(${ICON_AREA.w / 100})" fill="${monoColor}" stroke="${monoColor}">
+  <g transform="translate(${ICON_BOX_X}, ${ICON_BOX_Y}) scale(${ICON_BOX_W / 100})" fill="${monoColor}" stroke="${monoColor}">
     ${innerContent}
   </g>
-  <text x="${COUNTER_W / 2}" y="${COUNTER_H - 10}" text-anchor="middle" fill="${monoColor}" font-family="ui-monospace, SF Mono, Menlo, Monaco, monospace" font-size="10" font-weight="700">${factorText}</text>
+  <text x="${COUNTER_W / 2}" y="${COUNTER_H - FACTOR_ROW_H * 0.25}" text-anchor="middle" fill="${monoColor}" font-family="ui-monospace, SF Mono, Menlo, Monaco, monospace" font-size="${FACTOR_FONT_SIZE}" font-weight="700">${factorText}</text>
 </svg>`;
 }
 

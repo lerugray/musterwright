@@ -4,6 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Musterwright — OOB editor</title>
+  <script>
+    (function () {
+      var k = 'musterwright-theme';
+      var s = localStorage.getItem(k);
+      var dark = s ? s === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (!dark) document.documentElement.setAttribute('data-theme', 'light');
+    })();
+  </script>
   <link rel="stylesheet" href="src/style.css" />
   <!-- milsymbol v3.0.4 (MIT, vendored) — must load before the module entry -->
   <script src="src/vendor/milsymbol.js"></script>
@@ -19,6 +27,7 @@
       <span id="autosave-status" class="autosave-status">—</span>
     </div>
     <div class="actions">
+      <button id="theme-toggle" type="button" aria-label="Toggle light/dark theme">Light</button>
       <button id="new-blank" type="button">New blank</button>
       <button id="open-gota" type="button">Open GotA source</button>
       <div class="export-group">

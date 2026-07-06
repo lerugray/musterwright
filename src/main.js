@@ -7,8 +7,17 @@ import { renderDataTable, downloadJson, highlightRow, el } from './ui.js';
 import { findingsBySeverity } from './validate.js';
 import { deriveAvPerSp } from './schema/spine.js';
 import { renderCounterSVG, getFactionColor } from './counters/render-counter.js';
+import {
+  initTheme,
+  toggleTheme,
+  setStoredTheme,
+  applyTheme,
+  themeToggleLabel
+} from './theme.js';
 
 const store = new ProjectStore();
+
+let currentTheme = initTheme(document, localStorage, window.matchMedia('(prefers-color-scheme: dark)'));
 
 const UI = {
   projectName: document.getElementById('project-name'),
@@ -25,8 +34,17 @@ const UI = {
   exportOob: document.getElementById('export-oob'),
   exportAssets: document.getElementById('export-assets'),
   exportPools: document.getElementById('export-pools'),
-  exportAll: document.getElementById('export-all')
+  exportAll: document.getElementById('export-all'),
+  themeToggle: document.getElementById('theme-toggle')
 };
+
+UI.themeToggle.textContent = themeToggleLabel(currentTheme);
+UI.themeToggle.addEventListener('click', () => {
+  currentTheme = toggleTheme(currentTheme);
+  applyTheme(document, currentTheme);
+  setStoredTheme(localStorage, currentTheme);
+  UI.themeToggle.textContent = themeToggleLabel(currentTheme);
+});
 
 const sortState = {
   roster: { key: null, dir: 'asc' },

@@ -10,7 +10,7 @@ const ms = require('../src/vendor/milsymbol.js');
 globalThis.ms = ms;
 
 import { getSidc, resolveSidc, SIDC_MAP, FALLBACK_SIDC } from '../src/counters/sidc-map.js';
-import { iconColorFor, formatFactorText, renderCounterSVG } from '../src/counters/render-counter.js';
+import { iconColorFor, formatFactorText, renderCounterSVG, COUNTER_LAYOUT } from '../src/counters/render-counter.js';
 
 // ---- SIDC map tests ------------------------------------------------------
 
@@ -155,5 +155,22 @@ describe('counter SVG rendering', () => {
 
     // Light color should have black strokes (fill="#000000")
     assert.ok(lightSvg.includes('#000000'), 'light background should use black icon');
+  });
+
+  it('lays out SPI proportions: centered icon box, large factor row', () => {
+    const { width, height, iconBox, factorRowHeight, factorFontSize } = COUNTER_LAYOUT;
+
+    const widthRatio = iconBox.w / width;
+    assert.ok(widthRatio >= 0.45 && widthRatio <= 0.55, `icon box width ratio ${widthRatio}`);
+    assert.equal(iconBox.x, (width - iconBox.w) / 2, 'icon box should be horizontally centered');
+    assert.ok(iconBox.y + iconBox.h <= height - factorRowHeight, 'icon sits above factor row');
+    assert.ok(factorRowHeight >= height * 0.2, 'factor row reserves at least 20% of counter height');
+    assert.ok(factorFontSize >= 12, 'factor font should be enlarged for legibility');
+
+    const unit = { class: 'inf', factors: { sp: 4, dv: 6, mp: 1 } };
+    const svg = renderCounterSVG(unit, '#3b6cb4');
+    assert.ok(svg.includes(`translate(${iconBox.x}, ${iconBox.y})`), 'SVG uses centered icon transform');
+    assert.ok(svg.includes(`font-size="${factorFontSize}"`), 'SVG uses enlarged factor font');
+    assert.ok(svg.includes('font-weight="700"'), 'factor text is bold');
   });
 });
