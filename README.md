@@ -16,8 +16,16 @@ Zero-build vanilla JS local web app. Real game data lives in gitignored
 
 MVP shipped 2026-07-05: spine schema, GotA adapter, live validation (caught
 the real `gota-006` duplicate-id defect), and a clean import→export
-round-trip. Browser-dogfooded twice. Next up: a design-pipeline UI pass,
-TWU + NaB adapters, and the Phase 2 counter-graphics generator.
+round-trip. Browser-dogfooded twice.
+
+2026-07-06: **Counters tab** — APP-6/MIL-STD-2525 unit symbols via vendored
+milsymbol (MIT, `src/vendor/`), SPI-style counter geometry (centered symbol
+box, large bottom factor row), faction-color squares with luminance-picked
+icon contrast. **Light mode** — drafting-paper theme, toggle in the top
+chrome, persisted to localStorage with OS-preference fallback. Design
+register + mockups live under `opendesign/` (design-system project:
+"Musterwright — Muster Desk" on Claude Design). Next up: TWU + NaB adapters
+and the Phase 2 counter-graphics generator (print/export path).
 
 ## Quick start
 
