@@ -6,6 +6,7 @@ import { ProjectStore, makeBlankGotAProject } from './store.js';
 import { renderDataTable, downloadJson, highlightRow, el } from './ui.js';
 import { findingsBySeverity } from './validate.js';
 import { deriveAvPerSp } from './schema/spine.js';
+import { renderCounterSVG, getFactionColor } from './counters/render-counter.js';
 
 const store = new ProjectStore();
 
@@ -18,6 +19,7 @@ const UI = {
   assetsContainer: document.getElementById('assets-container'),
   poolsContainer: document.getElementById('pools-container'),
   validationContainer: document.getElementById('validation-container'),
+  countersContainer: document.getElementById('counters-container'),
   openGotA: document.getElementById('open-gota'),
   newBlank: document.getElementById('new-blank'),
   exportOob: document.getElementById('export-oob'),
@@ -234,6 +236,47 @@ function renderValidation() {
   UI.validationContainer.append(list);
 }
 
+function renderCounters() {
+  const project = store.getProject();
+  const container = UI.countersContainer;
+  container.innerHTML = '';
+
+  const units = project.units;
+  if (!units.length) {
+    container.append(el('p', { className: 'empty', textContent: 'No units in the roster.' }));
+    return;
+  }
+
+  // Group units by faction
+  const byFaction = {};
+  for (const u of units) {
+    const f = u.faction || 'Unknown';
+    if (!byFaction[f]) byFaction[f] = [];
+    byFaction[f].push(u);
+  }
+
+  for (const [faction, factionUnits] of Object.entries(byFaction)) {
+    const color = getFactionColor(faction);
+    const group = el('div', { className: 'counter-group' },
+      el('h3', { className: 'counter-faction-label', textContent: faction })
+    );
+    const grid = el('div', { className: 'counter-grid' });
+
+    for (const u of factionUnits) {
+      const svgStr = renderCounterSVG(u, color);
+      const cell = el('div', { className: 'counter-cell' });
+      cell.innerHTML = svgStr;
+      // Add unit id label below the counter
+      const label = el('div', { className: 'counter-unit-label', textContent: u.name || u.id });
+      cell.append(label);
+      grid.append(cell);
+    }
+
+    group.append(grid);
+    container.append(group);
+  }
+}
+
 function render() {
   updateTitle();
   updateStatus();
@@ -242,6 +285,7 @@ function render() {
   if (active === 'assets') renderAssets();
   if (active === 'pools') renderPools();
   if (active === 'validation') renderValidation();
+  if (active === 'counters') renderCounters();
 }
 
 store.onChange = render;
