@@ -1,0 +1,17 @@
+[
+  {
+    "slug": "roster-workbench",
+    "title": "Roster Workbench",
+    "group": "roster-workbench"
+  },
+  {
+    "slug": "counter-preview",
+    "title": "Counter Preview",
+    "group": "counter-preview"
+  },
+  {
+    "slug": "findings-panel",
+    "title": "Findings Panel",
+    "group": "findings-panel"
+  }
+]

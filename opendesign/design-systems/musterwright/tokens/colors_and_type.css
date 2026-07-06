@@ -1,0 +1,20 @@
+/*
+ * musterwright — color & type tokens
+ * Source of truth: opendesign/design-register.md (token table is binding).
+ * System font stacks only — no webfonts, no @import, no external URLs.
+ */
+
+:root {
+  /* Desk / chrome / data — the hx- family adopted from hexwright */
+  --hx-bg-canvas: #15171a; /* desk / page ground           */
+  --hx-bg-panel:  #1d2024; /* panels, cards (one step up)  */
+  --hx-hairline:   #2a2e33; /* borders, dividers, chrome     */
+  --hx-text:       #d5d9de; /* primary text                 */
+  --hx-text-dim:   #8d949c; /* muted / secondary            */
+  --hx-accent:     #7ad9ff; /* focus, action, selection     */
+  --hx-danger:     #dc2828; /* blocking findings, destructive*/
+
+  /* Font stacks — system only */
+  --font-ui:   system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-data: ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+}
