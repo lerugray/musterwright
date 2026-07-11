@@ -1,0 +1,14 @@
+{
+  "ALD": [
+    { "id": "1 Bridgetown", "faction": "ALD", "sp": 4, "dv": 6, "mp": 1, "type": "inf", "size": "x", "fresh": true },
+    { "id": "2 Ferry Gate", "faction": "ALD", "sp": 3, "dv": 5, "mp": 1, "type": "inf", "size": "x" },
+    { "id": "1 Alden Horse", "faction": "ALD", "sp": 2, "dv": 4, "mp": 2, "type": "cav", "size": "x", "fresh": true }
+  ],
+  "_note_ALD": "Kingdom of Aldenmark — holds the Bridgetown crossing at scenario start.",
+  "VER": [
+    { "id": "1 Verra Guard", "faction": "VER", "sp": 4, "dv": 6, "mp": 1, "type": "inf", "size": "x", "fresh": true },
+    { "id": "3 Millward", "faction": "VER", "sp": 3, "dv": 5, "mp": 1, "type": "inf", "size": "x" },
+    { "id": "2 Verra Lancers", "faction": "VER", "sp": 2, "dv": 4, "mp": 2, "type": "cav", "size": "x" }
+  ],
+  "_note_VER": "Republic of Verrania — enters from the south map edge on turn 1."
+}

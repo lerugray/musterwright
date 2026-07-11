@@ -1,0 +1,8 @@
+{
+  "ALD": [
+    { "id": "A1 Bridge Battery", "faction": "ALD", "av": 3, "dv": 1, "mp": 0, "type": "art", "size": "x" }
+  ],
+  "VER": [
+    { "id": "V1 Field Guns", "faction": "VER", "av": 4, "dv": 1, "mp": 1, "type": "art", "size": "x" }
+  ]
+}
